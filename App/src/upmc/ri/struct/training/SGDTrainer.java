@@ -24,25 +24,37 @@ public class SGDTrainer<X, Y> implements ITrainer<X, Y> {
 	}
 	
 	@Override
-	public void  train(List<STrainingSample<X, Y>> lts , IStructModel<X,Y> model) {
+	public void  train(List<STrainingSample<X, Y>> lts , IStructModel<X,Y> model) {	
 		Random rand = new Random();
+
+		// w <- 0
 		double[] parameters = model.getParameters();
-		IStructInstantiation<X, Y> instantiation = model.instantiation();
 		for (int i = 0; i < parameters.length; i++) {
 			parameters[i] = 0.0;
 		}
+		
+		IStructInstantiation<X, Y> instantiation = model.instantiation();
+		
+		/* Pour t = 1,...,T */
 		for (int t = 0; t < this.max_iter; t++) {
+			/* Pour i = 1,...,N */
 			for (int i = 0; i < lts.size(); i++) {
-				int index = rand.nextInt((lts.size() - 0) + 1) + 0;
-				STrainingSample<X, Y> ts = lts.get(index);
+				/* Selection aléatoire d'une paire d'apprentissage */
+				STrainingSample<X, Y> ts = lts.get(rand.nextInt(lts.size()));
 				X xi = ts.input;
 				Y yi = ts.output;
+				
+				/* ŷ <- loss-augmented inference */
 				Y lai = model.lai(ts);
+				
+				/* calcul du gradient */
 				double[] psi_lai = instantiation.psi(xi, lai);
 				double[] psi_yi = instantiation.psi(xi, yi);
-				double[] gi = VectorOperations.minus(psi_lai, psi_yi);
+				double[] g = VectorOperations.minus(psi_lai, psi_yi);
+				
+				/* mise a jour */
 				for (int j = 0; j < parameters.length; j++) {
-					parameters[j] = parameters[j] - this.eps * (this.lambda * parameters[j] + gi[j]);
+					parameters[j] = parameters[j] - this.eps * (this.lambda * parameters[j] + g[j]);
 				}
 			}
 			this.evaluator.evaluate();

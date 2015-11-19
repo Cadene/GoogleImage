@@ -4,6 +4,6 @@ import java.util.Set;
 
 public interface IStructInstantiation <X,Y>{
 	public double[] psi(X x,Y y);
-	public double delta(Y y1,Y y2);
+	public double delta(Y y,Y yi);
 	public Set<Y> enumerateY();
 }
