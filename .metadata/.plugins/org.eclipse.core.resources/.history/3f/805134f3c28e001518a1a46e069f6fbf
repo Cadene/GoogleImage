@@ -1,0 +1,40 @@
+package upmc.ri.bin;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import upmc.ri.index.ImageFeatures;
+import upmc.ri.index.VIndexFactory;
+import upmc.ri.io.ImageNetParser;
+import upmc.ri.struct.DataSet;
+import upmc.ri.struct.STrainingSample;
+
+public class VisualIndexes {
+
+	public static DataSet create() throws Exception {
+		String path2dataset = "/users/Etu3/3000693/Documents/RI/GoogleImage/sbow/";
+		List<String> classnames = new ArrayList<String>();
+		classnames.add("acoustic_guitar.txt");
+		classnames.add("ambulance.txt");
+		classnames.add("electric_guitar.txt");
+		classnames.add("european_fire_salamander.txt");
+		classnames.add("harp.txt");
+		classnames.add("minivan.txt");
+		classnames.add("taxi.txt");
+		classnames.add("tree-frog.txt");
+		classnames.add("wood-frog.txt");
+		
+		List<STrainingSample> listtrain = new ArrayList<STrainingSample>();
+		for (String classname : classnames) {
+			for (List<Integer> words : ImageNetParser.getWords(path2dataset + classname)) {
+				double[] features = VIndexFactory.computeBow(words);
+				listtrain.add(new STrainingSample(features, classname));
+			}
+		}
+		
+		
+		
+		
+		return null;
+	}
+}
