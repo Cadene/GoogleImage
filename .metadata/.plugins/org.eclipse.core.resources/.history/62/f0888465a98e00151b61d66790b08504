@@ -1,0 +1,18 @@
+package upmc.ri.struct.training;
+
+import java.util.List;
+
+import upmc.ri.struct.STrainingSample;
+import upmc.ri.struct.model.IStructModel;
+
+public class SGDTrainer<X, Y> implements ITrainer<X, Y> {
+
+	@Override
+	public void  train(List<STrainingSample<X, Y>> lts , IStructModel<X,Y> model) {
+		
+	}
+	
+	private void convex_loss() {
+		
+	}
+}

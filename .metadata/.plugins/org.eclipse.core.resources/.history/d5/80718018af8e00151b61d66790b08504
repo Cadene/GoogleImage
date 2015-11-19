@@ -1,0 +1,5 @@
+package upmc.ri.struct.model;
+
+public class LinearStructModel implements IStructModel<X, Y> {
+
+}
