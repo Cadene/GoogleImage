@@ -1,5 +1,0 @@
-package upmc.ri.struct.training;
-
-public class SGDTrainer implements ITrainer<X, Y> {
-
-}

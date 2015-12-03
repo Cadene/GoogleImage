@@ -1,0 +1,34 @@
+package upmc.ri.struct.instantiation;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.ejml.data.D1Matrix64F;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.MatrixVisualization;
+
+public class MultiClassHier extends MultiClass {
+
+	private double[][] distances;
+
+	public MultiClassHier(Iterable<String> classes, double[][] distances) {
+		super(classes);
+		this.distances = distances;
+	}
+
+	@Override
+	public double delta(String y, String yi) {
+		if (this.classes.get(y) == this.classes.get(yi)){
+			return 0;
+		}
+		return 1;
+	}
+
+	@Override
+	public Set<String> enumerateY() {
+		return classes.keySet();
+	}
+
+}

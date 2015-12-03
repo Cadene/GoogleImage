@@ -2,6 +2,14 @@ package upmc.ri.utils;
 
 public class VectorOperations {
 
+	public static double[] init(int dim, double scalar) {
+		double[] v = new double[dim];
+		for (int i=0; i < dim; i++) {
+			v[i] = scalar;
+		}
+		return v;
+	}
+	
 	public static double dot(double [] v1 , double [] v2){
 		double res = 0.0;
 		for(int i=0;i<v1.length;i++){
@@ -33,4 +41,15 @@ public class VectorOperations {
 		return res;
 	}
 	
+	public static double[] mult(double scalar, double[] v1) {
+		double [] res = v1.clone();
+		for (int i=0; i<v1.length; i++) {
+			res[i] *= scalar;
+		}
+		return res;
+	}
+	
+	public static double[] mult(int scalar, double[] v1) {
+		return mult((double) scalar, v1);
+	}
 }

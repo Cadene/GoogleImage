@@ -1,5 +1,7 @@
 package upmc.ri.struct.model;
 
+import java.util.List;
+
 import upmc.ri.struct.STrainingSample;
 import upmc.ri.struct.instantiation.IStructInstantiation;
 

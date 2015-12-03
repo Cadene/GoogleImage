@@ -3,8 +3,18 @@
 <fullyQualifiedTypeName name="upmc.ri.struct.Evaluator"/>
 <fullyQualifiedTypeName name="java.util.Random"/>
 <fullyQualifiedTypeName name="X"/>
+<fullyQualifiedTypeName name="upmc.ri.utils.VectorOperations"/>
+<fullyQualifiedTypeName name="upmc.ri.struct.ranking.RankingOutput"/>
 <fullyQualifiedTypeName name="java.util.List"/>
 <fullyQualifiedTypeName name="java.util.ArrayList"/>
 <fullyQualifiedTypeName name="java.util.Collections"/>
-<fullyQualifiedTypeName name="upmc.ri.utils.VectorOperations"/>
+<fullyQualifiedTypeName name="upmc.ri.struct.ranking.RankingFunctions"/>
+<fullyQualifiedTypeName name="upmc.ri.struct.instantiation.RankingInstantiation"/>
+<fullyQualifiedTypeName name="upmc.ri.struct.model.RankingStructModel"/>
+<fullyQualifiedTypeName name="upmc.ri.utils.Drawing"/>
+<fullyQualifiedTypeName name="edu.cmu.lti.ws4j.WS4J"/>
+<fullyQualifiedTypeName name="edu.cmu.lti.lexical_db.NictWordNet"/>
+<fullyQualifiedTypeName name="edu.cmu.lti.lexical_db.ILexicalDatabase"/>
+<fullyQualifiedTypeName name="edu.cmu.lti.ws4j.RelatednessCalculator"/>
+<fullyQualifiedTypeName name="edu.cmu.lti.ws4j.impl.WuPalmer"/>
 </qualifiedTypeNameHistroy>

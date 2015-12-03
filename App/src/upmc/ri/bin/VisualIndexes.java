@@ -1,6 +1,9 @@
 package upmc.ri.bin;
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.List;
 import java.util.ArrayList;
@@ -47,8 +50,18 @@ public class VisualIndexes {
 		FileOutputStream fileOut = new FileOutputStream(targetPath);
 		ObjectOutputStream out = new ObjectOutputStream(fileOut);
 		out.writeObject(dataset);
+		out.flush();
 		out.close();
 		System.out.printf("Dataset" + strPCA + "saved in " + targetPath);
+		return dataset;
+	}
+	
+	public static DataSet<double[], String> load(String sourcePath) throws IOException, ClassNotFoundException {
+		DataSet<double[], String> dataset;
+		FileInputStream fis = new FileInputStream(sourcePath);
+        ObjectInputStream in = new ObjectInputStream(fis);
+        dataset = (DataSet<double[], String>) in.readObject();
+        in.close();
 		return dataset;
 	}
 	

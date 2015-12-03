@@ -11,6 +11,8 @@ public class RankingOutput {
 						   // for ranking [2,0,1,3] the positionning is [1,2,0,3] : 
 						   // example 1 is at rank 1, example 1 is at rank 2, example 3 is at rank 0, etc
 							// Positionning used to compute psi => use function getPositionningFromRanking() for conversion
+	//Ranking: [2;0;1;3]					   
+	//Positionning:
 	
 	private List<Integer> labelsGT; // Containing labels for the list of examples 
 							// Examples : assume that we have nbPlus = 1 positive examples, 

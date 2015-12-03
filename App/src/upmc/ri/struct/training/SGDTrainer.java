@@ -2,6 +2,7 @@ package upmc.ri.struct.training;
 
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import upmc.ri.struct.Evaluator;
 import upmc.ri.struct.STrainingSample;
@@ -75,7 +76,11 @@ public class SGDTrainer<X, Y> implements ITrainer<X, Y> {
 			X xi = ts.input;
 			Y yi = ts.output;
 			double max = -9999999999.99;
-			for (Y y : instantiation.enumerateY()) {
+			Set<Y> enumY = instantiation.enumerateY();
+			if (enumY == null) { // TODO
+				return 0.0;
+			}
+			for (Y y : enumY) {
 				max = Math.max( max, instantiation.delta(yi, y) + VectorOperations.dot(instantiation.psi(xi, y), parameters) );
 			}
 			loss += max - VectorOperations.dot(instantiation.psi(xi, yi), parameters);

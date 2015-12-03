@@ -1,0 +1,101 @@
+package upmc.ri.struct.instantiation;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.ejml.data.D1Matrix64F;
+import org.ejml.data.DenseMatrix64F;
+import org.ejml.ops.MatrixVisualization;
+
+import upmc.ri.struct.ranking.RankingOutput;
+import upmc.ri.utils.VectorOperations;
+
+public class RankingInstantiation implements IStructInstantiation<List<double[]>, RankingOutput> {
+	
+	
+	private int dim;
+
+	public RankingInstantiation(int dim) {
+		super();
+		this.dim = dim;
+	}
+
+	@Override
+	public double[] psi(double[] x, String y) {
+		double[] p = new double[this.classes.size() * x.length];
+		for (int i = 0 ; i < x.length * this.classes.get(y) ; i++){
+			p[i] = 0;
+		}
+		for (int i = 0; i < x.length; i++){
+			p[i + x.length * this.classes.get(y)] = x[i];
+		}
+		/*
+		for (int i = x.length * this.classes.get(y)     ; i < x.length * (this.classes.get(y)+1) ; i++){
+			p[i] = x[i - (x.length * this.classes.get(y))];
+		}
+		*/
+		for (int i = x.length * (this.classes.get(y)+1) ; i < p.length ; i++){
+			p[i] = 0;
+		}
+		return p;
+	}
+
+	@Override
+	public double delta(String y, String yi) {
+		if (this.classes.get(y) == this.classes.get(yi)){
+			return 0;
+		}
+		return 1;
+	}
+
+	@Override
+	public Set<String> enumerateY() {
+		return classes.keySet();
+	}
+
+	@Override
+	public double[] psi(List<double[]> x, RankingOutput y) {
+		double [] p = VectorOperations.init(this.dim, 0);
+		List<Integer> labels = y.getLabelsGT();
+		List<Integer> labelsPos = new ArrayList<Integer>();
+		List<Integer> labelsNeg = new ArrayList<Integer>();
+		List<Integer> positionning = y.getPositionningFromRanking();
+		
+		for (int i = 0; i < x.size(); i++) {
+			if (labels.get(i) > 0) {
+				labelsPos.add(i);
+			} else {
+				labelsNeg.add(i);
+			}
+		}
+		
+		for (int i = 0; i < labelsPos.size(); i++) {
+			for (int j = 0; j < labelsNeg.size(); j++) {
+				
+				int yij;
+				if (positionning.get(i) < positionning.get(j)) {
+					yij = 1;
+				} else {
+					yij = -1;
+				}
+				
+				// p += yij * (xi - xj)
+				p = VectorOperations.add(p, VectorOperations.mult(yij, VectorOperations.minus(x.get(i), x.get(j))));
+				
+			}
+		}
+		
+		
+		return null;
+	}
+
+	@Override
+	public double delta(RankingOutput y, RankingOutput yi) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+}
