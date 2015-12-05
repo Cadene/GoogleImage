@@ -35,9 +35,9 @@ public class MulticlassClassif {
 		// Modèle MultiClass --------------------------------------------------------------------------------
 		
 		// Hyperparamètres
-		double eps = 1e-2;
-		double lambda = 1e-6;
-		int maxIter = 100;
+		double eps = 1e1;
+		double lambda = 2e-6;
+		int maxIter = 20;
 		
 		// Définition du modèle
 		MulticlassClassif multiclassClassif = new MulticlassClassif(sourcePath);
@@ -77,9 +77,9 @@ public class MulticlassClassif {
 		// Modèle MultiClassHier ----------------------------------------------------------------------------
 		
 		// Hyperparamètres
-		double epsHier = 1e-2;
-		double lambdaHier = 1e-6;
-		int maxIterHier = 100;
+		double epsHier = 1e0;
+		double lambdaHier = 2e-6;
+		int maxIterHier = 50;
 		
 		// Définition du modèle
 		MulticlassClassif multiclassClassifHier = new MulticlassClassif(sourcePath);

@@ -5,8 +5,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import upmc.ri.utils.VectorOperations;
-
 public class DataSet<X,Y>  implements Serializable{	
 	/**
 	 * 
@@ -29,5 +27,4 @@ public class DataSet<X,Y>  implements Serializable{
 		}
 		return out;
 	}
-	
 }

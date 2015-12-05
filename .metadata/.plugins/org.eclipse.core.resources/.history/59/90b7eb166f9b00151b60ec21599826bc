@@ -49,13 +49,11 @@ public class VisualIndexes {
 			strPCA = " with PCA (" + nbPca + " components) ";
 		}
 		for (int i = 0; i < dataset.listtrain.size(); i++) {
-			STrainingSample<double[], String> sample = dataset.listtrain.get(i);
-			dataset.listtrain.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
-		}
-		for (int i = 0; i < dataset.listtest.size(); i++) {
 			STrainingSample<double[], String> sample = dataset.listtest.get(i);
-			dataset.listtest.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
+			dataset.listtest.set(i, new STrainingSample(
+					VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
 		}
+		
 		FileOutputStream fileOut = new FileOutputStream(targetPath);
 		ObjectOutputStream out = new ObjectOutputStream(fileOut);
 		out.writeObject(dataset);

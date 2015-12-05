@@ -14,7 +14,6 @@ import upmc.ri.io.ImageNetParser;
 import upmc.ri.struct.DataSet;
 import upmc.ri.struct.STrainingSample;
 import upmc.ri.utils.PCA;
-import upmc.ri.utils.VectorOperations;
 
 public class VisualIndexes {
 
@@ -47,14 +46,6 @@ public class VisualIndexes {
 		if (nbPca > 0){
 			dataset = PCA.computePCA(dataset, nbPca);
 			strPCA = " with PCA (" + nbPca + " components) ";
-		}
-		for (int i = 0; i < dataset.listtrain.size(); i++) {
-			STrainingSample<double[], String> sample = dataset.listtrain.get(i);
-			dataset.listtrain.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
-		}
-		for (int i = 0; i < dataset.listtest.size(); i++) {
-			STrainingSample<double[], String> sample = dataset.listtest.get(i);
-			dataset.listtest.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
 		}
 		FileOutputStream fileOut = new FileOutputStream(targetPath);
 		ObjectOutputStream out = new ObjectOutputStream(fileOut);

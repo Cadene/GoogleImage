@@ -56,6 +56,7 @@ public class VisualIndexes {
 			STrainingSample<double[], String> sample = dataset.listtest.get(i);
 			dataset.listtest.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
 		}
+		
 		FileOutputStream fileOut = new FileOutputStream(targetPath);
 		ObjectOutputStream out = new ObjectOutputStream(fileOut);
 		out.writeObject(dataset);
