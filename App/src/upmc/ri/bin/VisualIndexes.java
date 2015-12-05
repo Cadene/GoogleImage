@@ -48,6 +48,7 @@ public class VisualIndexes {
 			dataset = PCA.computePCA(dataset, nbPca);
 			strPCA = " with PCA (" + nbPca + " components) ";
 		}
+		// normalisation de chaque vecteurs par Norm L2
 		for (int i = 0; i < dataset.listtrain.size(); i++) {
 			STrainingSample<double[], String> sample = dataset.listtrain.get(i);
 			dataset.listtrain.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
@@ -77,7 +78,7 @@ public class VisualIndexes {
 	public static void main(String[] args) throws Exception {
 		int nbPCA = 250;
 		String sourcePath = "/users/nfs/Enseignants/thomen/Bases/ImageNet/BoF/txt/";
-		String targetPath = "/Vrac/3152691/RI_Image/bows_" + nbPCA + ".ser";
+		String targetPath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
 		VisualIndexes.create(sourcePath, targetPath, nbPCA);
 	}
 	
