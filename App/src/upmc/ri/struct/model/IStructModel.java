@@ -1,7 +1,5 @@
 package upmc.ri.struct.model;
 
-import java.util.List;
-
 import upmc.ri.struct.STrainingSample;
 import upmc.ri.struct.instantiation.IStructInstantiation;
 
@@ -10,4 +8,6 @@ public interface IStructModel<X,Y> {
 	public Y lai(STrainingSample<X,Y> ts);
 	public IStructInstantiation <X,Y> instantiation();
 	public double[] getParameters();
+	
+	public void setInstantiation(IStructInstantiation <X,Y> instantiation);
 }

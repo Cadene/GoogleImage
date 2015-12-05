@@ -33,7 +33,7 @@ public class RankingInstantiation implements IStructInstantiation<List<double[]>
 		List<Integer> labelsNeg = new ArrayList<Integer>();
 		List<Integer> positionning = y.getPositionningFromRanking();
 		for (int i = 0; i < x.size(); i++) {
-			if (labels.get(i) > 0) {
+			if (labels.get(i) >= 0) {
 				labelsPos.add(i);
 			} else {
 				labelsNeg.add(i);

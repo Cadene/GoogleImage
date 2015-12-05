@@ -20,4 +20,9 @@ public abstract class LinearStructModel<X, Y> implements IStructModel<X, Y> {
 	public double[] getParameters() {
 		return this.parameters;
 	}
+	
+	@Override
+	public void setInstantiation(IStructInstantiation <X,Y> instantiation) {
+		this.instantiation = instantiation;
+	}
 }
