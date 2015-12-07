@@ -38,11 +38,11 @@ public class Ranking {
 
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		int nbPCA = 250;
-		//String sourcePath = "/Vrac/3152691/RI_Image/bows_" + nbPCA + ".ser";
-		String sourcePath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/bows_" + nbPCA + ".ser";
+		String sourcePath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
+		//String sourcePath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/bows_" + nbPCA + ".ser";
 		//String classQuery = "european_fire_salamander";
-		//String classQuery = "harp";
-		String classQuery = "ambulance";
+		String classQuery = "harp";
+		//String classQuery = "ambulance";
 		//String classQuery = "wood-frog";
 		
 		Ranking ranking = new Ranking(sourcePath, classQuery);
@@ -59,7 +59,7 @@ public class Ranking {
 		
 		double eps = 1e1;
 		double lambda = 1e-6;
-		int maxIter = 49;
+		int maxIter = 50;
 		SGDTrainer<List<double[]>, RankingOutput> trainer = new SGDTrainer<List<double[]>, RankingOutput>(evaluator, eps, lambda, maxIter);
 		
 		trainer.train(ranking.dataSet.listtrain, rankingStructModel);

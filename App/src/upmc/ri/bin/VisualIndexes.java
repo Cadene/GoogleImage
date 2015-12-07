@@ -86,15 +86,15 @@ public class VisualIndexes {
 			dataset.listtest.set(i, new STrainingSample<double[], String>(xi, dataset.listtest.get(i).output));
 		}*/
 		// normalisation de chaque vecteurs par Norm L2
-		/*
+		
 		for (int i = 0; i < dataset.listtrain.size(); i++) {
 			STrainingSample<double[], String> sample = dataset.listtrain.get(i);
-			dataset.listtrain.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
+			dataset.listtrain.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.normL1(sample.input),sample.input), sample.output));
 		}
 		for (int i = 0; i < dataset.listtest.size(); i++) {
 			STrainingSample<double[], String> sample = dataset.listtest.get(i);
-			dataset.listtest.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
-		}*/
+			dataset.listtest.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.normL1(sample.input),sample.input), sample.output));
+		}
 		// Recalculer 
 		mean = VectorOperations.init(n, 0.0);
 		for (int i = 0; i < dataset.listtrain.size(); i++) {
@@ -132,10 +132,10 @@ public class VisualIndexes {
 	
 	public static void main(String[] args) throws Exception {
 		int nbPCA = 250;
-		//String sourcePath = "/users/nfs/Enseignants/thomen/Bases/ImageNet/BoF/txt/";
-		//String targetPath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
-		String sourcePath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/BoF/txt/";
-		String targetPath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/bows_" + nbPCA + ".ser";
+		String sourcePath = "/users/nfs/Enseignants/thomen/Bases/ImageNet/BoF/txt/";
+		String targetPath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
+		//String sourcePath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/BoF/txt/";
+		//String targetPath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/bows_" + nbPCA + ".ser";
 		VisualIndexes.create(sourcePath, targetPath, nbPCA);
 	}
 	

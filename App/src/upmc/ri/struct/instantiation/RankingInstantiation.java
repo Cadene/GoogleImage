@@ -25,8 +25,8 @@ public class RankingInstantiation implements IStructInstantiation<List<double[]>
 	}
 
 
-	@Override
-	public double[] psi(List<double[]> x, RankingOutput y) {
+	
+	public double[] psi2(List<double[]> x, RankingOutput y) {
 		double [] p = VectorOperations.init(this.dim, 0);
 		List<Integer> labels = y.getLabelsGT();
 		List<Integer> labelsPos = new ArrayList<Integer>();
@@ -55,6 +55,37 @@ public class RankingInstantiation implements IStructInstantiation<List<double[]>
 			}
 		}
 		return p;
+	}
+	
+public double[] psi(List<double[]> x, RankingOutput y) {
+		
+		double[] psi = new double[x.get(0).length];
+		
+		int cptPos = 0; // compte le nombre de positif compté pour optimiser algorithme
+		int cptNeg = 0; // compte le nombre de negatif compté pour optimiser algorithme
+		List<Integer> labelsGT = y.getLabelsGT();
+		List<Integer> ranking = y.getRanking();
+		List<Integer> positionning = y.getPositionningFromRanking();
+		
+		for(int i=0; i<labelsGT.size(); i++){
+			if(labelsGT.get(i)==1){
+				cptPos++;
+				cptNeg = 0;
+				for(int j=0; j<labelsGT.size(); j++){
+					if(labelsGT.get(j)==-1){
+						cptNeg++;
+						int signe = -1;
+						if(positionning.get(i)<positionning.get(j)) signe = 1;
+						for(int k=0; k<psi.length; k++){
+							psi[k] += signe*(x.get(i)[k]-x.get(j)[k]);
+						}
+					}
+					if(cptNeg==(labelsGT.size()-y.getNbPlus())) break; // Cas ou il n'y a plus de moins
+				}
+				if(cptPos==y.getNbPlus()) break; // Cas ou il n'y a plus de plus
+			}
+		}
+		return psi;
 	}
 
 	@Override

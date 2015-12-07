@@ -29,8 +29,8 @@ public class MulticlassClassif {
 	
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		int nbPCA = 250;
-		//String sourcePath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
-		String sourcePath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/bows_" + nbPCA + ".ser";
+		String sourcePath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
+		//String sourcePath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/bows_" + nbPCA + ".ser";
 		int dimpsi = 0;
 		Set<String> classes;
 

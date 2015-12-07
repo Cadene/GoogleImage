@@ -30,6 +30,13 @@ public class VectorOperations {
 	public static double norm(double[]v){
 		return Math.sqrt(norm2(v));
 	}
+	public static double norm(double[]v, int order){
+		double norm = 0.0;
+		for (int i = 0; i < v.length; i++) {
+			norm += Math.pow(v[i], order);
+		}
+		return Math.pow(norm, 1.0/order);
+	}
 	
 	public static double[] minus(double [] v1 , double [] v2){
 		double[] res = v1.clone();
@@ -64,5 +71,13 @@ public class VectorOperations {
 			v[i] = Math.sqrt(v[i]);
 		}
 		return v;
+	}
+
+	public static double normL1(double[] v) {
+		double norm = 0.0;
+		for (int i = 0; i < v.length; i++) {
+			norm += Math.abs(v[i]);
+		}
+		return norm;
 	}
 }
