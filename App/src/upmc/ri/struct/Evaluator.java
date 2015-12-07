@@ -31,6 +31,7 @@ public class Evaluator<X,Y> {
 		err_test=0.0;
 		pred_test = new ArrayList<Y>();
 		// Evaluate testing set
+		System.out.println("listtest size" + listtest.size());
 		for(STrainingSample<X,Y> ts : listtest){
 			Y pred = model.predict(ts);
 			pred_test.add(pred);

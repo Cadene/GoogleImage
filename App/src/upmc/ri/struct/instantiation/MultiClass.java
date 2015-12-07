@@ -9,11 +9,11 @@ import org.ejml.data.D1Matrix64F;
 import org.ejml.data.DenseMatrix64F;
 import org.ejml.ops.MatrixVisualization;
 
-public class MultiClass implements IStructInstantiation<double[], String> {
+public class Multiclass implements IStructInstantiation<double[], String> {
 
 	protected Map<String, Integer> classes;
 	
-	public MultiClass(Iterable<String> classes) {
+	public Multiclass(Iterable<String> classes) {
 		super();
 		int i = 0;
 		this.classes = new HashMap<String, Integer>();

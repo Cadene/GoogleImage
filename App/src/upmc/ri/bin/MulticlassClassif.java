@@ -7,8 +7,8 @@ import java.util.Set;
 import upmc.ri.struct.DataSet;
 import upmc.ri.struct.Evaluator;
 import upmc.ri.struct.STrainingSample;
-import upmc.ri.struct.instantiation.MultiClass;
-import upmc.ri.struct.instantiation.MultiClassHier;
+import upmc.ri.struct.instantiation.Multiclass;
+import upmc.ri.struct.instantiation.MulticlassHier;
 import upmc.ri.struct.model.LinearStructModel;
 import upmc.ri.struct.model.LinearStructModel_Ex;
 import upmc.ri.struct.training.SGDTrainer;
@@ -29,14 +29,15 @@ public class MulticlassClassif {
 	
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		int nbPCA = 250;
-		String sourcePath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
+		//String sourcePath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
+		String sourcePath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/bows_" + nbPCA + ".ser";
 		int dimpsi = 0;
 		Set<String> classes;
 
 		// Modèle MultiClass --------------------------------------------------------------------------------
 		
 		// Hyperparamètres
-		double eps = 1e-2;
+		double eps = 1e-3;
 		double lambda = 1e-6;
 		int maxIter = 100;
 		
@@ -44,7 +45,7 @@ public class MulticlassClassif {
 		MulticlassClassif multiclassClassif = new MulticlassClassif(sourcePath);
 		dimpsi = multiclassClassif.dataSet.listtest.get(0).input.length;
 		classes = multiclassClassif.dataSet.outputs();
-		MultiClass multiclass = new MultiClass(classes);
+		Multiclass multiclass = new Multiclass(classes);
 		LinearStructModel<double[], String> linear = new LinearStructModel_Ex<double[], String>(multiclass, dimpsi * classes.size());
 		
 		// Définition de l'évaluateur
@@ -67,53 +68,14 @@ public class MulticlassClassif {
 			predictions.add(linear.predict(ts));
 			gt.add(ts.output);
 		}
-		linear.setInstantiation(new MultiClassHier(classes));
+		linear.setInstantiation(new MulticlassHier(classes));
 		evaluator.setModel(linear);
 		evaluator.evaluate();		
 		System.out.println("Train Error Hier: " + String.valueOf(evaluator.getErr_train()));
 		System.out.println("Test  Error Hier: " + String.valueOf(evaluator.getErr_test() ));
 		
 		multiclass.confusionMatrix(predictions, gt);
-
-		// Modèle MultiClassHier ----------------------------------------------------------------------------
 		
-		// Hyperparamètres
-		double epsHier = 1e-2;
-		double lambdaHier = 1e-6;
-		int maxIterHier = 100;
 		
-		// Définition du modèle
-		MulticlassClassif multiclassClassifHier = new MulticlassClassif(sourcePath);
-		dimpsi = multiclassClassifHier.dataSet.listtest.get(0).input.length;
-		classes = multiclassClassifHier.dataSet.outputs();
-		MultiClass multiclassHier = new MultiClassHier(classes);
-							
-		// Définition de l'évaluateur
-		LinearStructModel<double[], String> linearHier = new LinearStructModel_Ex<double[], String>(multiclassHier, dimpsi * classes.size());
-		Evaluator<double[], String> evaluatorHier = new Evaluator<double[], String>();
-		evaluatorHier.setModel(linearHier);
-		evaluatorHier.setListtrain(multiclassClassifHier.dataSet.listtrain);
-		evaluatorHier.setListtest(multiclassClassifHier.dataSet.listtest);
-		
-		// Entrainement
-		SGDTrainer<double[], String> trainerHier = new SGDTrainer<double[], String>(evaluatorHier, epsHier, lambdaHier, maxIterHier);
-		trainerHier.train(multiclassClassifHier.dataSet.listtrain, linearHier);
-		
-		// Evaluation
-		evaluatorHier.evaluate();
-		System.out.println("Train Error Hier : " + String.valueOf(evaluatorHier.getErr_train()));
-		System.out.println("Test  Error Hier : " + String.valueOf(evaluatorHier.getErr_test() ));
-		ArrayList<String> predictionsHier = new ArrayList<String>();
-		ArrayList<String> gtHier = new ArrayList<String>();
-		for (STrainingSample<double[], String> ts : multiclassClassifHier.dataSet.listtest) {
-			predictionsHier.add(linearHier.predict(ts));
-			gtHier.add(ts.output);
-		}
-		linearHier.setInstantiation(new MultiClass(classes));
-		evaluatorHier.setModel(linearHier);
-		evaluatorHier.evaluate();
-		System.out.println("Train Error 1-0  : " + String.valueOf(evaluatorHier.getErr_train()));
-		System.out.println("Test  Error 1-0  : " + String.valueOf(evaluatorHier.getErr_test() ));
-		multiclassHier.confusionMatrix(predictionsHier, gtHier);
 	}
 }

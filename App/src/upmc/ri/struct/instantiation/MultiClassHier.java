@@ -5,11 +5,11 @@ import edu.cmu.lti.lexical_db.NictWordNet;
 import edu.cmu.lti.ws4j.RelatednessCalculator;
 import edu.cmu.lti.ws4j.impl.WuPalmer;
 
-public class MultiClassHier extends MultiClass {
+public class MulticlassHier extends Multiclass {
 
 	private double[][] distances;
 
-	public MultiClassHier(Iterable<String> classes) {
+	public MulticlassHier(Iterable<String> classes) {
 		super(classes);
 		int n = this.classes.size();
 		this.distances = new double[n][n];
@@ -30,7 +30,7 @@ public class MultiClassHier extends MultiClass {
 					if (this.distances[i][j] < min){
 						min = this.distances[i][j];
 					}
-					if (this.distances[i][j] > min){
+					if (this.distances[i][j] > max){
 						max = this.distances[i][j];
 					}
 				}

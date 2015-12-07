@@ -10,12 +10,24 @@ public class STrainingSample<X,Y>implements Serializable{
 	 */
 	private static final long serialVersionUID = -3221897092308838680L;
 	public X input;
-	public Y output; 
+	public Y output;
+	private String path; 
 	
 	public STrainingSample(X input, Y output)
 	{
 		this.input = input;
 		this.output = output;
+	}
+	
+	public STrainingSample(X input, Y output, String path)
+	{
+		this.input = input;
+		this.output = output;
+		this.path = path;
+	}
+	
+	public String getName() {
+		return this.path;
 	}
 	
 	

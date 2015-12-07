@@ -1,0 +1,104 @@
+package upmc.ri.bin;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Set;
+
+import upmc.ri.index.VIndexFactory;
+import upmc.ri.io.ImageNetParser;
+import upmc.ri.struct.DataSet;
+import upmc.ri.struct.STrainingSample;
+import upmc.ri.utils.PCA;
+import upmc.ri.utils.VectorOperations;
+
+public class VisualIndexes {
+
+	public static DataSet<double[], String> create(String sourcePath) throws Exception {
+		Set<String> classnames = ImageNetParser.classesImageNet();
+
+		List<STrainingSample<double[], String>> listtrain = new ArrayList<STrainingSample<double[], String>>();
+		List<STrainingSample<double[], String>> listtest = new ArrayList<STrainingSample<double[], String>>();
+		
+		/* Calcul des BoW de chaque image de chaque classe: */
+		for (String classname : classnames) {
+			int count = 0;
+			for (List<Integer> words : ImageNetParser.getWords(sourcePath + classname + ".txt")) {
+				double[] bow = VIndexFactory.computeBow(words);
+				/* les 800 premières images en train, le reste en test */
+				if (count < 800) {
+					listtrain.add(new STrainingSample<double[], String>(bow, classname, sourcePath));
+				} else {
+					listtest.add(new STrainingSample<double[], String>(bow, classname));
+				}
+				count++;
+			}
+		}
+		return new DataSet<double[], String>(listtrain, listtest);
+	}
+	
+	public static DataSet<double[], String> create(String sourcePath, String targetPath, int nbPca) throws Exception {
+		DataSet<double[], String> dataset = VisualIndexes.create(sourcePath);
+		String strPCA = " ";
+		if (nbPca > 0){
+			dataset = PCA.computePCA(dataset, nbPca);
+			strPCA = " with PCA (" + nbPca + " components) ";
+		}
+		// normalisation de chaque vecteurs par Norm L2
+		/*for (int i = 0; i < dataset.listtrain.size(); i++) {
+			STrainingSample<double[], String> sample = dataset.listtrain.get(i);
+			dataset.listtrain.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
+		}
+		for (int i = 0; i < dataset.listtest.size(); i++) {
+			STrainingSample<double[], String> sample = dataset.listtest.get(i);
+			dataset.listtest.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
+		}*/
+		// calcule des moyennes
+		int n = dataset.listtrain.get(0).input.length;
+		double[] mean = VectorOperations.init(n, 0.0);
+		for (int i = 0; i < dataset.listtrain.size(); i++) {
+			double[] xi = dataset.listtrain.get(i).input;
+			mean = VectorOperations.add(mean, xi);
+		}
+		double[] std = VectorOperations.init(n, 0.0);
+		for (int i = 0; i < dataset.listtrain.size(); i++) {
+			double[] xi = dataset.listtrain.get(i).input;
+			for (int id = 0; id < n ; id++) {
+				std[id] += mean[id]
+			}
+			mean = VectorOperations.minus(mean, xi);
+		}
+		for (int i = 0; i < dataset.listtrain.size(); i++) {
+			STrainingSample<double[], String> sample = dataset.listtrain.get(i);
+			dataset.listtrain.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
+		}
+		FileOutputStream fileOut = new FileOutputStream(targetPath);
+		ObjectOutputStream out = new ObjectOutputStream(fileOut);
+		out.writeObject(dataset);
+		out.flush();
+		out.close();
+		System.out.printf("Dataset" + strPCA + "saved in " + targetPath);
+		return dataset;
+	}
+	
+	public static DataSet<double[], String> load(String sourcePath) throws IOException, ClassNotFoundException {
+		DataSet<double[], String> dataset;
+		FileInputStream fis = new FileInputStream(sourcePath);
+        ObjectInputStream in = new ObjectInputStream(fis);
+        dataset = (DataSet<double[], String>) in.readObject();
+        in.close();
+		return dataset;
+	}
+	
+	public static void main(String[] args) throws Exception {
+		int nbPCA = 250;
+		String sourcePath = "/users/nfs/Enseignants/thomen/Bases/ImageNet/BoF/txt/";
+		String targetPath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
+		VisualIndexes.create(sourcePath, targetPath, nbPCA);
+	}
+	
+}

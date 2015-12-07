@@ -17,4 +17,6 @@
 <fullyQualifiedTypeName name="edu.cmu.lti.ws4j.RelatednessCalculator"/>
 <fullyQualifiedTypeName name="edu.cmu.lti.ws4j.impl.WuPalmer"/>
 <fullyQualifiedTypeName name="upmc.ri.utils.VectorOperations"/>
+<fullyQualifiedTypeName name="java.io.File"/>
+<fullyQualifiedTypeName name="javax.imageio.ImageIO"/>
 </qualifiedTypeNameHistroy>

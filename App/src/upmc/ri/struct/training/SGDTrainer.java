@@ -60,7 +60,7 @@ public class SGDTrainer<X, Y> implements ITrainer<X, Y> {
 			}
 			this.evaluator.evaluate();
 			System.out.println("epoch : " + t);
-			System.out.println("global loss : " + this.convex_loss(lts, model));
+			//System.out.println("global loss : " + this.convex_loss(lts, model));
 			System.out.println("err train : " + this.evaluator.getErr_train());
 			System.out.println("err test : " + this.evaluator.getErr_test());
 		}
@@ -77,9 +77,6 @@ public class SGDTrainer<X, Y> implements ITrainer<X, Y> {
 			Y yi = ts.output;
 			double max = -9999999999.99;
 			Set<Y> enumY = instantiation.enumerateY();
-			if (enumY == null) { // TODO
-				return 0.0;
-			}
 			for (Y y : enumY) {
 				max = Math.max( max, instantiation.delta(yi, y) + VectorOperations.dot(instantiation.psi(xi, y), parameters) );
 			}

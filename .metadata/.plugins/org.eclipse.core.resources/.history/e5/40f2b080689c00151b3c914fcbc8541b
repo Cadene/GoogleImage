@@ -1,0 +1,64 @@
+package upmc.ri.struct.model;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import upmc.ri.struct.STrainingSample;
+import upmc.ri.struct.instantiation.IStructInstantiation;
+import upmc.ri.struct.ranking.RankingFunctions;
+import upmc.ri.struct.ranking.RankingOutput;
+import upmc.ri.utils.VectorOperations;
+
+public class RankingStructModel extends LinearStructModel<List<double[]>, RankingOutput> {
+
+	public RankingStructModel (IStructInstantiation instantiation, int dimpsi) {
+		super(dimpsi);
+		this.instantiation = instantiation;
+	}
+
+	@Override
+	public RankingOutput predict(STrainingSample<List<double[]>, RankingOutput> ts) {
+		RankingOutput rankingOutputFinal;
+		List<double[]> x = ts.input;
+		List<ResultWrapper> listRes = new ArrayList<ResultWrapper>();
+		for (int i=0; i < x.size(); i++) {
+			double rslt = VectorOperations.dot(this.parameters, x.get(i));
+			listRes.add(new ResultWrapper(i,rslt));
+		}
+		Collections.sort(listRes, Collections.reverseOrder());
+		List<Integer> ranking = new ArrayList<Integer>();
+		for (int i=0; i < listRes.size(); i++) {
+			ranking.add(listRes.get(i).id);
+		}
+		return new RankingOutput(ts.output.getNbPlus(), ranking , ts.output.getLabelsGT());
+	}
+
+	@Override
+	public RankingOutput lai(STrainingSample<List<double[]>, RankingOutput> ts) {
+		return RankingFunctions.loss_augmented_inference(ts, this.parameters);
+	}
+	
+	class ResultWrapper implements Comparable<ResultWrapper> {
+		public int id;
+		public double rslt;
+		
+		public ResultWrapper (int id, double rslt) {
+			this.id = id;
+			this.rslt = rslt;
+		}
+
+		@Override
+		public int compareTo(ResultWrapper o) {
+			if (this.rslt == o.rslt) {
+				return 0;
+			} else if (this.rslt > o.rslt) {
+				return 1;
+			} else {
+				return -1;
+			}
+		}
+	}
+}
+
+

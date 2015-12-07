@@ -15,7 +15,8 @@ public class Test {
 	public static void main(String[] args) throws ClassNotFoundException, IOException {
 		
 		int nbPCA = 250;
-		String sourcePath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
+		//String sourcePath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
+		String sourcePath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/bows_" + nbPCA + ".ser";
 		int dimpsi = 0;
 		Set<String> classes;
 
@@ -35,6 +36,7 @@ public class Test {
 		
 		int n = classes.size();
 		double[][] distances = new double[n][n];
+		double[][] new_distances = new double[n][n];
 		ILexicalDatabase db = new NictWordNet();
 		RelatednessCalculator calculator = new WuPalmer(db);
 		
@@ -58,16 +60,10 @@ public class Test {
 					if (distances[i][j] < min){
 						min = distances[i][j];
 					}
-					if (distances[i][j] > min){
+					if (distances[i][j] > max){
 						max = distances[i][j];
 					}
 				}
-			}
-		}
-		
-		for (int i = 0; i < classes.size(); i++) {
-			for (int j = 0; j < classes.size(); j++) {
-				System.out.println("["+i+","+j+"] "+distances[i][j]);
 			}
 		}
 		
@@ -76,8 +72,7 @@ public class Test {
 		for (int i = 0; i < n; i++){
 			for (int j = 0; j < n; j++){
 				if (i != j) {
-					distances[i][j] = 1 + (20 - 1) * (distances[i][j] - min) / (max - min);
-					distances[i][j] /= 100;
+					new_distances[i][j] =  (distances[i][j] - min) * (2 - 0.1) / (max - min) + 0.1;
 				}
 			}
 		}
@@ -85,14 +80,18 @@ public class Test {
 		System.out.println("--------------");
 		
 		for (int i = 0; i < classes.size(); i++) {
-			for (int j = 0; j < classes.size(); j++) {
-				System.out.println("["+i+","+j+"] "+distances[i][j]);
+			for (int j = i+1; j < classes.size(); j++) {
+				System.out.println("["+i+","+j+"]");
+				System.out.println("avant: "+distances[i][j]);
+				System.out.println("apres: "+new_distances[i][j]);
 			}
 		}
 
 		System.out.println(max);
 		
 		System.out.println(min);
+		
+		double a = 0.1 + (2 - 0.1) * (0.6 - 0.0714285714285714) / (0.15384615384615385 - 0.0714285714285714);
 		
 	}
 

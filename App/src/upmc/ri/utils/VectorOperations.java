@@ -2,6 +2,12 @@ package upmc.ri.utils;
 
 public class VectorOperations {
 
+	public static void print(double [] v) {
+		for (int i = 0; i < v.length; i++) {
+			System.out.println(i + ": " + v[i]);
+		}
+	}
+	
 	public static double[] init(int dim, double scalar) {
 		double[] v = new double[dim];
 		for (int i=0; i < dim; i++) {
@@ -51,5 +57,12 @@ public class VectorOperations {
 	
 	public static double[] mult(int scalar, double[] v1) {
 		return mult((double) scalar, v1);
+	}
+
+	public static double[] sqrt(double[] v) {
+		for (int i = 0; i < v.length; i++) {
+			v[i] = Math.sqrt(v[i]);
+		}
+		return v;
 	}
 }

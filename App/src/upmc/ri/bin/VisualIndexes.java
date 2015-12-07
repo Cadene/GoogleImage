@@ -31,7 +31,7 @@ public class VisualIndexes {
 				double[] bow = VIndexFactory.computeBow(words);
 				/* les 800 premières images en train, le reste en test */
 				if (count < 800) {
-					listtrain.add(new STrainingSample<double[], String>(bow, classname));
+					listtrain.add(new STrainingSample<double[], String>(bow, classname, sourcePath));
 				} else {
 					listtest.add(new STrainingSample<double[], String>(bow, classname));
 				}
@@ -48,7 +48,45 @@ public class VisualIndexes {
 			dataset = PCA.computePCA(dataset, nbPca);
 			strPCA = " with PCA (" + nbPca + " components) ";
 		}
+		
+		
+		// calcule des moyennes
+		int n = dataset.listtrain.get(0).input.length;
+		double[] mean = VectorOperations.init(n, 0.0);
+		for (int i = 0; i < dataset.listtrain.size(); i++) {
+			double[] xi = dataset.listtrain.get(i).input;
+			mean = VectorOperations.add(mean, xi);
+		}
+		mean = VectorOperations.mult(1.0 / dataset.listtrain.size(), mean);
+		System.out.println(mean[0]);
+		// calcule des stds
+		double[] std = VectorOperations.init(n, 0.0);
+		for (int i = 0; i < dataset.listtrain.size(); i++) {
+			double[] xi = dataset.listtrain.get(i).input;
+			for (int id = 0; id < n ;id++) {
+				std[id] += (mean[id] - xi[id]) * (mean[id] - xi[id]);
+			}
+		}
+		std = VectorOperations.mult(1.0 / dataset.listtrain.size(), std);
+		std = VectorOperations.sqrt(std);
+		System.out.println(std[0]);
+		// Centrer et réduire 
+		/*for (int i = 0; i < dataset.listtrain.size(); i++) {
+			double[] xi = dataset.listtrain.get(i).input;
+			for (int id = 0; id < n; id++) {
+				xi[id] = (xi[id] - mean[id]) / std[id];
+			}
+			dataset.listtrain.set(i, new STrainingSample<double[], String>(xi, dataset.listtrain.get(i).output));
+		}
+		for (int i = 0; i < dataset.listtest.size(); i++) {
+			double[] xi = dataset.listtest.get(i).input;
+			for (int id = 0; id < n; id++) {
+				xi[id] = (xi[id] - mean[id]) / std[id];
+			}
+			dataset.listtest.set(i, new STrainingSample<double[], String>(xi, dataset.listtest.get(i).output));
+		}*/
 		// normalisation de chaque vecteurs par Norm L2
+		/*
 		for (int i = 0; i < dataset.listtrain.size(); i++) {
 			STrainingSample<double[], String> sample = dataset.listtrain.get(i);
 			dataset.listtrain.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
@@ -56,7 +94,24 @@ public class VisualIndexes {
 		for (int i = 0; i < dataset.listtest.size(); i++) {
 			STrainingSample<double[], String> sample = dataset.listtest.get(i);
 			dataset.listtest.set(i, new STrainingSample<double[], String>(VectorOperations.mult(1.0 / VectorOperations.norm(sample.input),sample.input), sample.output));
+		}*/
+		// Recalculer 
+		mean = VectorOperations.init(n, 0.0);
+		for (int i = 0; i < dataset.listtrain.size(); i++) {
+			double[] xi = dataset.listtrain.get(i).input;
+			mean = VectorOperations.add(mean, xi);
+		}mean = VectorOperations.mult(1.0 / dataset.listtrain.size(), mean);
+		System.out.println(mean[0]);
+		std = VectorOperations.init(n, 0.0);
+		for (int i = 0; i < dataset.listtrain.size(); i++) {
+			double[] xi = dataset.listtrain.get(i).input;
+			for (int id = 0; id < n ;id++) {
+				std[id] += (mean[id] - xi[id]) * (mean[id] - xi[id]);
+			}
 		}
+		std = VectorOperations.mult(1.0 / dataset.listtrain.size(), std);
+		std = VectorOperations.sqrt(std);
+		System.out.println(std[0]);
 		FileOutputStream fileOut = new FileOutputStream(targetPath);
 		ObjectOutputStream out = new ObjectOutputStream(fileOut);
 		out.writeObject(dataset);
@@ -77,8 +132,10 @@ public class VisualIndexes {
 	
 	public static void main(String[] args) throws Exception {
 		int nbPCA = 250;
-		String sourcePath = "/users/nfs/Enseignants/thomen/Bases/ImageNet/BoF/txt/";
-		String targetPath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
+		//String sourcePath = "/users/nfs/Enseignants/thomen/Bases/ImageNet/BoF/txt/";
+		//String targetPath = "/Vrac/3000693/RI_Image/bows_" + nbPCA + ".ser";
+		String sourcePath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/BoF/txt/";
+		String targetPath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/bows_" + nbPCA + ".ser";
 		VisualIndexes.create(sourcePath, targetPath, nbPCA);
 	}
 	

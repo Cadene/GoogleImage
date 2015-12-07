@@ -19,19 +19,18 @@ public class RankingStructModel extends LinearStructModel<List<double[]>, Rankin
 
 	@Override
 	public RankingOutput predict(STrainingSample<List<double[]>, RankingOutput> ts) {
-		RankingOutput rankingOutputFinal;
 		List<double[]> x = ts.input;
 		List<ResultWrapper> listRes = new ArrayList<ResultWrapper>();
 		for (int i=0; i < x.size(); i++) {
 			double rslt = VectorOperations.dot(this.parameters, x.get(i));
 			listRes.add(new ResultWrapper(i,rslt));
 		}
-		Collections.sort(listRes);
+		Collections.sort(listRes, Collections.reverseOrder());
 		List<Integer> ranking = new ArrayList<Integer>();
 		for (int i=0; i < listRes.size(); i++) {
 			ranking.add(listRes.get(i).id);
 		}
-		return new RankingOutput(ts.output.getNbPlus(), ranking , ts.output.getLabelsGT());
+		return new RankingOutput(ts.output.getNbPlus(), ranking, ts.output.getLabelsGT());
 	}
 
 	@Override

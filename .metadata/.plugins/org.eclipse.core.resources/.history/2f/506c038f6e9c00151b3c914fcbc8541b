@@ -1,0 +1,73 @@
+package upmc.ri.bin;
+
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import javax.imageio.ImageIO;
+
+import upmc.ri.struct.DataSet;
+import upmc.ri.struct.Evaluator;
+import upmc.ri.struct.STrainingSample;
+import upmc.ri.struct.instantiation.Multiclass;
+import upmc.ri.struct.instantiation.RankingInstantiation;
+import upmc.ri.struct.model.LinearStructModel;
+import upmc.ri.struct.model.LinearStructModel_Ex;
+import upmc.ri.struct.model.RankingStructModel;
+import upmc.ri.struct.ranking.RankingFunctions;
+import upmc.ri.struct.ranking.RankingOutput;
+import upmc.ri.struct.training.SGDTrainer;
+import upmc.ri.utils.Drawing;
+
+public class Ranking {
+
+	private DataSet<List<double[]>, RankingOutput> dataSet;
+	
+	public Ranking(DataSet<List<double[]>, RankingOutput> dataSet) {
+		super();
+		this.dataSet = dataSet;
+	}
+	
+	public Ranking(String sourcePath, String classQuery) throws ClassNotFoundException, IOException {
+		this(RankingFunctions.convertClassif2Ranking(VisualIndexes.load(sourcePath), classQuery));
+	}
+
+	public static void main(String[] args) throws ClassNotFoundException, IOException {
+		int nbPCA = 250;
+		//String sourcePath = "/Vrac/3152691/RI_Image/bows_" + nbPCA + ".ser";
+		String sourcePath = "/Users/remicadene/Dropbox/_Docs/UPMC/RI/bows_" + nbPCA + ".ser";
+		//String classQuery = "european_fire_salamander";
+		String classQuery = "ambulance";
+		
+		Ranking ranking = new Ranking(sourcePath, classQuery);
+		
+		int dimpsi = ranking.dataSet.listtest.get(0).input.get(0).length;
+		
+		RankingInstantiation rankingInstantiation = new RankingInstantiation(dimpsi);
+		RankingStructModel rankingStructModel = new RankingStructModel(rankingInstantiation, dimpsi);
+		
+		Evaluator<List<double[]>, RankingOutput> evaluator = new Evaluator<List<double[]>, RankingOutput>();
+		evaluator.setModel(rankingStructModel);
+		evaluator.setListtrain(ranking.dataSet.listtrain); 
+		evaluator.setListtest(ranking.dataSet.listtest);
+		
+		double eps = 1e1;
+		double lambda = 1e-6;
+		int maxIter = 50;
+		SGDTrainer<List<double[]>, RankingOutput> trainer = new SGDTrainer<List<double[]>, RankingOutput>(evaluator, eps, lambda, maxIter);
+		
+		trainer.train(ranking.dataSet.listtrain, rankingStructModel);
+		
+		double rp[][] = RankingFunctions.recalPrecisionCurve(rankingStructModel.predict(ranking.dataSet.listtest.get(0)));
+		int nbPlus = ranking.dataSet.listtest.get(0).output.getNbPlus();
+		BufferedImage im = Drawing.traceRecallPrecisionCurve(nbPlus, rp);
+		File f = new File("MyFile.png");
+		ImageIO.write(im, "PNG", f);
+		System.out.println("AP score: " + RankingFunctions.averagePrecision(rankingStructModel.predict(ranking.dataSet.listtest.get(0))));
+	}
+
+}
